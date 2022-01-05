@@ -1,0 +1,14 @@
+{
+  "name": "notepad-personal",
+  "version": "1.0.0",
+  "description": "A personal notepad for users",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^5.0.4"
+  }
+}
