@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Photon</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/photon.css">
+
+    <!-- Electron Javascript -->
+    <script src="app.js" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <!-- Wrap your entire app inside .window -->
+    <div class="window">
+      <!-- .toolbar-header sits at the top of your app -->
+      <header class="toolbar toolbar-header">
+        <div class="toolbar-actions">
+            <div class="btn-group">
+              
+              <button class="btn btn-default" onclick="incFont()">
+                <span class="icon icon-plus"></span>
+              </button>
+              <button class="btn btn-default" onclick="decFont()">
+                <span class="icon icon-minus"></span>
+              </button>
+              
+            </div>
+
+            <button class="btn btn-default pull-right" onclick="savetxt()">
+              <span class="icon icon-download icon-text"></span>
+              Save
+            </button>
+          </div>
+      </header>
+
+      <!-- Your app's content goes inside .window-content -->
+      <div class="window-content">
+        <textarea name="np-content" style="width: 100%;height: 100%;resize: none; border: none; outline: none;font-size: 20px;"></textarea>
+      </div>
+    </div>
+    <script>
+        const electron = require('electron')
+        let {ipcRenderer} = electron
+        let textarea = document.querySelector("textarea");
+        let defFontSize = 20;
+
+        let incFont = () =>{
+            textarea.style.fontSize = `${++defFontSize}px`;
+        }
+
+        let decFont = () =>{
+            textarea.style.fontSize = `${--defFontSize}px`;
+        }
+
+        let savetxt = ()=>{
+            let text = textarea.value;
+            // console.log(text);
+            ipcRenderer.send('save',text);
+        }
+
+        ipcRenderer.on('saved',(event, results)=>{
+            if(results == 'success')
+                {console.log("Saved known to Renderer!");textarea.style.backgroundColor="green";}
+            else{
+                console.log("Got Error!");
+                textarea.style.backgroundColor="red";
+            }
+            setTimeout(()=>{
+                textarea.style.backgroundColor = 'white';
+            },1000);
+        })
+
+        ipcRenderer.on("save-clicked",()=>{
+            savetxt();
+        })
+
+    </script>
+  </body>
+</html>
